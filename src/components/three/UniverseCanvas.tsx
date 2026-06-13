@@ -1,13 +1,15 @@
 import { Suspense, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { EffectComposer, Bloom, Vignette, ChromaticAberration } from "@react-three/postprocessing";
+import { EffectComposer, Bloom, Vignette, ChromaticAberration, DepthOfField } from "@react-three/postprocessing";
 import { useScroll } from "motion/react";
 import * as THREE from "three";
 import { CameraRig } from "./CameraRig";
 import { World1Origin } from "./World1Origin";
+import { LogoAssembly } from "./LogoAssembly";
 import { TunnelTransition } from "./TunnelTransition";
 import { TechGalaxy } from "./TechGalaxy";
 import { DeepSpaceField } from "./DeepSpaceField";
+import { HoloCity } from "./HoloCity";
 import { CollapseCore } from "./CollapseCore";
 
 function Lights() {
@@ -51,13 +53,16 @@ export function UniverseCanvas() {
           <CameraRig progress={scrollYProgress} />
 
           <World1Origin reduced={reduced} />
+          {!reduced && <LogoAssembly progress={scrollYProgress} />}
           {!reduced && <TunnelTransition />}
           <TechGalaxy reduced={reduced} />
           <DeepSpaceField reduced={reduced} />
+          <HoloCity reduced={reduced} />
           <CollapseCore progress={scrollYProgress} reduced={reduced} />
 
           <EffectComposer enableNormalPass={false}>
             <Bloom intensity={0.35} luminanceThreshold={0.35} luminanceSmoothing={0.3} mipmapBlur radius={0.5} />
+            <DepthOfField focusDistance={0.04} focalLength={0.03} bokehScale={reduced ? 0 : 2} />
             <Vignette eskil={false} offset={0.18} darkness={0.85} />
             <ChromaticAberration offset={reduced ? new THREE.Vector2(0, 0) : new THREE.Vector2(0.0006, 0.0006)} />
           </EffectComposer>
